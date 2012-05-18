@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="RegRipperModule"
-	ProjectGUID="{00E3B0EE-B612-433A-A43E-1CE0B3DE1015}"
+	ProjectGUID="{4DD49717-8C15-4E07-8C18-D47A093184AA}"
 	RootNamespace="EntropyModule"
 	TargetFrameworkVersion="196613"
 	>
