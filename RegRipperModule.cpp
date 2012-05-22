@@ -95,7 +95,7 @@ static TskModule::Status runRegRipper(RegType type)
 
             // Confirm that we have the right file name since the query can return
             // files that are similar to the ones we want.
-            if (Poco::icompare(pFile->name(), fileName) != 0)
+            if (Poco::icompare(pFile->getName(), fileName) != 0)
                 continue;
 
             // Save the file content so that we can run RegRipper against it
@@ -106,8 +106,8 @@ static TskModule::Status runRegRipper(RegType type)
 
             // Create the output file if it does not exist.
             std::stringstream outFilePath;
-            outFilePath << outPath << "\\" << pFile->name() << "_" 
-                << pFile->id() << ".txt";
+            outFilePath << outPath << "\\" << pFile->getName() << "_" 
+                << pFile->getId() << ".txt";
             Poco::File outFile(outFilePath.str());
 
             if (!outFile.exists())
@@ -137,7 +137,7 @@ static TskModule::Status runRegRipper(RegType type)
             {
                 std::wstringstream msg;
                 msg << L"RegRipperModule::runRegRipper - RegRipper failed on file: "
-                    << pFile->name().c_str();
+                    << pFile->getName().c_str();
                 LOGWARN(msg.str());            
             }
         }
