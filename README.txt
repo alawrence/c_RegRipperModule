@@ -6,23 +6,49 @@ May 2012
 This module is for the C++ Sleuth Kit Framework.
 
 
-MODULE DESCRIPTION
+DESCRIPTION
 
-This module is a post-processing module that performs runs the RegRipper 
+This module is a report/post-processing module that runs the RegRipper 
 executable against the common set of Windows registry files (i.e., NTUSER, 
 SYSTEM, SAM and SOFTWARE).
 
-MODULE USAGE
+This module allows you to extract information from the system's registry.
 
-Configure the post-processing pipeline to include this module by adding a 
-"MODULE" element to the pipeline configuration file. Optionally set the 
-"arguments" attribute of the "MODULE" element to a semi-colon separated list 
-of arguments:
+This module requires that RegRipper be installed on the system. You can 
+download it from:
+
+    http://regripper.wordpress.com/
+
+
+USAGE
+
+Add this module to a post-processing/reporting pipeline.  See the TSK 
+Framework documents for information on adding the module 
+to the pipeline:
+
+    http://www.sleuthkit.org/sleuthkit/docs/framework-docs/
+
+
+This module takes optional configuration arguments in a semi-colon separated 
+list of arguments:
 
 	-e Path to the RegRipper executable
 	-o Path to directory in which to place RegRipper output
 
 If the executable path is omitted the module will look for RegRipper/rip.exe
-in the program directory. If the output directory path is omitted, the module
-will use the output directory specified in the framework system properties,
-usually obtained form the framework configuration file. 
+in the program directory. 
+
+If the output directory path is omitted, the module will store the results in
+a "RegRipper" directory in the output directory specified in the framework 
+system properties. 
+
+
+RESULTS
+
+The RegRipper output will be located in the location as described in the 
+previous section. Currently, the module does not interpret any of the results.
+It simply runs the tool.
+
+
+TODO
+- Make the module find RegRipper if is in the module's configuration directory.
