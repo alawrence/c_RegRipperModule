@@ -6,17 +6,23 @@ May 2012
 This module is for the C++ Sleuth Kit Framework.
 
 
-DESCRIPTION
+MODULE DESCRIPTION
 
-This module is a reporting module that performs runs the RegRipper 
-executable against the common set of Windows registry files 
-(i.e., NTUSER, SYSTEM, SAM and SOFTWARE).
+This module is a post-processing module that performs runs the RegRipper 
+executable against the common set of Windows registry files (i.e., NTUSER, 
+SYSTEM, SAM and SOFTWARE).
 
-USAGE
+MODULE USAGE
 
-Configure the reporting pipeline to include this module.
+Configure the post-processing pipeline to include this module by adding a 
+"MODULE" element to the pipeline configuration file. Optionally set the 
+"arguments" attribute of the "MODULE" element to a semi-colon separated list 
+of arguments:
 
-This module takes an optional semicolon separated list of arguments:
 	-e Path to the RegRipper executable
-	-o Directory in which to place RegRipper output
+	-o Path to directory in which to place RegRipper output
 
+If the executable path is omitted the module will look for RegRipper/rip.exe
+in the program directory. If the output directory path is omitted, the module
+will use the output directory specified in the framework system properties,
+usually obtained form the framework configuration file. 
