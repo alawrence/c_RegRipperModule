@@ -115,6 +115,10 @@ static TskModule::Status runRegRipper(RegType type)
                 outFile.createFile();
             }
 
+            std::wstringstream msg;
+            msg << L"RegRipperModule - Analyzing hive " << pFile->getPath().c_str() << L"/" << pFile->getName().c_str() << " to " << outFile.path().c_str();
+            LOGINFO(msg.str());
+
             Poco::Pipe outPipe;
 
             // Launch RegRipper

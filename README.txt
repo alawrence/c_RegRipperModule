@@ -40,15 +40,16 @@ in the program directory.
 
 If the output directory path is omitted, the module will store the results in
 a "RegRipper" directory in the output directory specified in the framework 
-system properties. 
-
+system properties.   
 
 RESULTS
 
 The RegRipper output will be located in the location as described in the 
 previous section. Currently, the module does not interpret any of the results.
-It simply runs the tool.
+It simply runs the tool.  It will save the analysis results from each 
+hive to its own text file. 
 
 
 TODO
 - Make the module find RegRipper if is in the module's configuration directory.
+- Save RegRipper STDERR output to a log file. 
