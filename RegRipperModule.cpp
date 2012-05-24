@@ -185,6 +185,7 @@ extern "C"
                     LOGERROR(L"RegRipperModule::initialize - missing argument to -e option.");
                     return TskModule::FAIL;
                 }
+                
             }
             else if ((*it).find("-o") == 0)
             {
@@ -203,6 +204,16 @@ extern "C"
             ripExePath.append(".\\RegRipper\\rip.exe");
         }
 
+        // strip off quotes if they were passed in via XML
+        if (ripExePath[0] == '"')
+            ripExePath.erase(0, 1);
+        if (ripExePath[ripExePath.size()-1] == '"')
+            ripExePath.erase(ripExePath.size()-1, 1);
+
+        std::wstringstream msg;
+        msg << L"RegRipperModule - Using exec: " << ripExePath.c_str();
+        LOGINFO(msg.str());
+
         if (outPath.empty())
         {
             outPath = TskUtilities::toUTF8(TSK_SYS_PROP_GET(TskSystemProperties::OUT_DIR));
@@ -215,6 +226,10 @@ extern "C"
     
             outPath.append("\\RegRipper");
         }
+
+        std::wstringstream msg1;
+        msg1 << L"RegRipperModule - Using output: " << outPath.c_str();
+        LOGINFO(msg1.str());
 
         try
         {
@@ -229,7 +244,17 @@ extern "C"
                 LOGERROR(msg.str());
                 return TskModule::FAIL;
             }
+        }
+        catch(std::exception& ex)
+        {
+            std::wstringstream msg;
+            msg << L"RegRipperModule::initialize rip.exe location - Unexpected error: "
+                << ex.what();
+            LOGERROR(msg.str());
+            return TskModule::FAIL;
+        }
 
+        try {
             // Create an output folder to store results
             Poco::File outDir(outPath);
 
@@ -238,7 +263,7 @@ extern "C"
         catch(std::exception& ex)
         {
             std::wstringstream msg;
-            msg << L"RegRipperModule::initialize - Unexpected error: "
+            msg << L"RegRipperModule::initialize output location - Unexpected error: "
                 << ex.what();
             LOGERROR(msg.str());
             return TskModule::FAIL;
