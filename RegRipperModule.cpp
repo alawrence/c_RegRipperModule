@@ -237,7 +237,7 @@ extern "C"
         
         if (ripExePath.empty())
         {
-            ripExePath = TskUtilities::toUTF8(TSK_SYS_PROP_GET(TskSystemProperties::PROG_DIR));
+            ripExePath = GetSystemProperty(TskSystemProperties::PROG_DIR);
             ripExePath.append(".\\RegRipper\\rip.exe");
         }
 
@@ -253,7 +253,7 @@ extern "C"
 
         if (outPath.empty())
         {
-            outPath = TskUtilities::toUTF8(TSK_SYS_PROP_GET(TskSystemProperties::OUT_DIR));
+            outPath = GetSystemProperty(TskSystemProperties::OUT_DIR);
 
             if (outPath.empty())
             {
