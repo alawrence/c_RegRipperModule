@@ -178,7 +178,7 @@ extern "C"
      */
     TSK_MODULE_EXPORT const char *description()
     {
-        return "";
+        return "Runs the RegRipper executable against the common set of Windows registry files (i.e., NTUSER, SYSTEM, SAM and SOFTWARE)";
     }
 
     /**
