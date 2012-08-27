@@ -350,13 +350,20 @@ extern "C"
     }
 
     /**
-     * Module cleanup function. This is where the module should free any resources 
-     * allocated during initialization or execution.
+     * Module cleanup function. Deletes output directory if it is empty.
      *
      * @returns TskModule::OK on success and TskModule::FAIL on error.
      */
     TskModule::Status TSK_MODULE_EXPORT finalize()
     {
+        // Delete output directory if it contains no files.
+        std::vector<std::string> fileList;
+        Poco::File outDir(outPath);
+        outDir.list(fileList);
+
+        if (fileList.empty())
+            outDir.remove();
+
         return TskModule::OK;
     }
 }
