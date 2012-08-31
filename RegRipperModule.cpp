@@ -253,7 +253,7 @@ extern "C"
 
         if (outPath.empty())
         {
-            outPath = GetSystemProperty(TskSystemProperties::OUT_DIR);
+            outPath = GetSystemProperty(TskSystemProperties::MODULE_OUT_DIR);
 
             if (outPath.empty())
             {
