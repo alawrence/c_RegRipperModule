@@ -14,6 +14,8 @@
 # Visual studio 
 win32/Debug/
 win32/Release/
+win32/ipch/
 *.ncb
 *.suo
 *.user
+*.sdf
