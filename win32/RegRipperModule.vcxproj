@@ -59,7 +59,7 @@
     </Link>
     <PostBuildEvent>
       <Command>
-      </Command>
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,17 +82,11 @@
     </Link>
     <PostBuildEvent>
       <Command>
-      </Command>
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\RegRipperModule.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\win32\framework\framework.vcxproj">
-      <Project>{f791b16a-1489-4526-9fff-cb481cec5414}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
