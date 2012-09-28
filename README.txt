@@ -47,9 +47,9 @@ RESULTS
 The RegRipper output will be located in the location as described in the 
 previous section. Currently, the module does not interpret any of the results.
 It simply runs the tool.  It will save the analysis results from each 
-hive to its own text file. 
+hive to its own text file. Errors from RegRipper will be logged to 
+RegRipperErrors.txt in the output directory.
 
 
 TODO
 - Make the module find RegRipper if is in the module's configuration directory.
-- Save RegRipper STDERR output to a log file. 

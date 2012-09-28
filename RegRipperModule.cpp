@@ -33,6 +33,7 @@
 
 static std::string ripExePath;
 static std::string outPath;
+static std::string errPath;
 static enum RegType
 {
     NTUSER,
@@ -121,17 +122,25 @@ static TskModule::Status runRegRipper(RegType type)
             LOGINFO(msg.str());
 
             Poco::Pipe outPipe;
+            Poco::Pipe errPipe;
 
             // Launch RegRipper
-            Poco::ProcessHandle handle = Poco::Process::launch(ripExePath, cmdArgs, NULL, &outPipe, NULL);
+            Poco::ProcessHandle handle = Poco::Process::launch(ripExePath, cmdArgs, NULL, &outPipe, &errPipe);
 
             // Copy output from Pipe to the output file.
             Poco::PipeInputStream istr(outPipe);
             Poco::FileOutputStream ostr(outFile.path(), std::ios::out|std::ios::app);
+            Poco::PipeInputStream errIstr(errPipe);
+            Poco::FileOutputStream errOstr(errPath, std::ios::out|std::ios::app);
 
             while (istr)
             {
                 Poco::StreamCopier::copyStream(istr, ostr);
+            }
+
+            while (errIstr)
+            {
+                Poco::StreamCopier::copyStream(errIstr, errOstr);
             }
             
             // The process should be finished. Check its exit code.
@@ -305,6 +314,17 @@ extern "C"
             LOGERROR(msg.str());
             return TskModule::FAIL;
         }
+
+        // Create the error output file if it does not exist.
+        std::stringstream errFilePath;
+        errFilePath << outPath << "\\RegRipperError.txt";
+        Poco::File errFile(errFilePath.str());
+
+        if (!errFile.exists())
+        {
+            errFile.createFile();
+        }
+        errPath = errFilePath.str();
 
         return TskModule::OK;
     }
