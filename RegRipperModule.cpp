@@ -30,6 +30,7 @@
 #include "Poco/PipeStream.h"
 #include "Poco/FileStream.h"
 #include "Poco/StreamCopier.h"
+#include "Poco/Path.h"
 
 static std::string ripExePath;
 static std::string outPath;
@@ -314,10 +315,43 @@ extern "C"
             LOGERROR(msg.str());
             return TskModule::FAIL;
         }
-
+        
         // Create the error output file if it does not exist.
         std::stringstream errFilePath;
-        errFilePath << outPath << "\\RegRipperError.txt";
+        errFilePath << outPath << "\\RegRipperError";
+
+        try {
+            // Create an output folder to store results
+            Poco::File errDir(errFilePath.str());
+
+            errDir.createDirectory();
+        }
+        catch(std::exception& ex)
+        {
+            std::wstringstream msg;
+            msg << L"RegRipperModule::initialize error output location - Unexpected error: "
+                << ex.what();
+            LOGERROR(msg.str());
+            return TskModule::FAIL;
+        }
+
+        outPath.append("\\RegRipperOutput");
+        try {
+            // Create an output folder to store results
+            Poco::File outDir(outPath);
+
+            outDir.createDirectory();
+        }
+        catch(std::exception& ex)
+        {
+            std::wstringstream msg;
+            msg << L"RegRipperModule::initialize output location - Unexpected error: "
+                << ex.what();
+            LOGERROR(msg.str());
+            return TskModule::FAIL;
+        }
+
+        errFilePath << "\\RegRipperError.txt";
         Poco::File errFile(errFilePath.str());
 
         if (!errFile.exists())
@@ -380,9 +414,29 @@ extern "C"
         std::vector<std::string> fileList;
         Poco::File outDir(outPath);
         outDir.list(fileList);
+        bool emptyout = false;
+        bool emptyerr = false;
 
-        if (fileList.empty())
+        if (fileList.empty()){
             outDir.remove();
+            emptyout = true;
+        }
+
+        // Delete output directory if it contains no files.
+        Poco::File errFile(errPath);
+        Poco::Path errPath(errPath);
+        Poco::File errDir(errPath.parent());
+
+        if (errFile.getSize() == 0){
+            errFile.remove();
+            errDir.remove();
+            emptyerr = true;
+        }
+
+        if (emptyout && emptyerr){
+            Poco::File moduleDir(errPath.parent().parent());
+            moduleDir.remove();
+        }
 
         return TskModule::OK;
     }
