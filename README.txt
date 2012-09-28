@@ -14,6 +14,8 @@ SYSTEM, SAM and SOFTWARE).
 
 This module allows you to extract information from the system's registry.
 
+DEPLOYMENT REQUIREMENTS
+
 This module requires that RegRipper be installed on the system. You can 
 download it from:
 
