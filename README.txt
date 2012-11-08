@@ -44,6 +44,13 @@ If the output directory path is omitted, the module will store the results in
 a "RegRipper" directory in the output directory specified in the framework 
 system properties.   
 
+This module currently pulls out operating system information and posts it to
+the blackboard. The OS name and version will be available with the base version
+of RegRipper. If you want to get the processor architecture as well place the 
+included RegRipper plugin (processorarchitecture.pl) in the RegRipper plugins
+directory and update the "system" file in that directory to include
+"processorarchitecture" as it's own line.
+
 RESULTS
 
 The RegRipper output will be located in the location as described in the 

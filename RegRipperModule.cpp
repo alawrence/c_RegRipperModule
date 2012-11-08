@@ -31,6 +31,7 @@
 #include "Poco/FileStream.h"
 #include "Poco/StreamCopier.h"
 #include "Poco/Path.h"
+#include "Poco/RegularExpression.h"
 
 static std::string ripExePath;
 static std::string outPath;
@@ -43,6 +44,87 @@ static enum RegType
     SOFTWARE,
     ALL
 };
+
+static std::vector<std::string> getRegRipperValues(const std::string& regRipperFileName, const std::string& valueName){
+    Poco::FileInputStream inStream(regRipperFileName);
+    std::vector<std::string> results;
+
+    std::string line;
+
+    std::stringstream pattern;
+    pattern << valueName << "[\\s\\->=:]+";
+
+    Poco::RegularExpression regex(pattern.str(), 0, true);
+    Poco::RegularExpression::Match match;
+
+    getline(inStream, line);
+
+    while(!line.empty()){
+        int nummatches = regex.match(line, match, 0);
+        if(nummatches > 0){
+            results.push_back(line.substr(match.offset + match.length, line.size()));
+        }
+        getline(inStream, line);
+    }
+    inStream.close();
+    return results;
+}
+
+static void getOSInfo(){
+    
+    std::string condition("WHERE files.dir_type = 5 AND UPPER(files.name) = 'SOFTWARE'");
+    TskImgDB& imgDB = TskServices::Instance().getImgDB();
+    
+    TskBlackboard& blackboard = TskServices::Instance().getBlackboard();
+
+    std::vector<uint64_t> fileIds = imgDB.getFileIds(condition);
+
+    TskFileManager& fileManager = TskServices::Instance().getFileManager();
+
+    // Iterate over the files running RegRipper on each one.
+    for (std::vector<uint64_t>::iterator it = fileIds.begin(); it != fileIds.end(); it++)
+    {
+        // Create a file object for the id
+        std::auto_ptr<TskFile> pFile(fileManager.getFile(*it));
+
+        // Create the output file if it does not exist.
+        std::stringstream outFilePath;
+        outFilePath << outPath << "\\" << pFile->getName() << "_" 
+            << pFile->getId() << ".txt";
+        
+        vector<std::string> names = getRegRipperValues(outFilePath.str(), "ProductName");
+        TskBlackboardArtifact osart = pFile->createArtifact(TSK_OS_INFO);
+        for(int i = 0; i < names.size(); i++){
+            osart.addAttribute(TskBlackboardAttribute(TSK_NAME, "RegRipperModule", "", names[i]));
+        }
+        vector<std::string> versions = getRegRipperValues(outFilePath.str(), "CSDVersion");
+        for(int i = 0; i < versions.size(); i++){
+            osart.addAttribute(TskBlackboardAttribute(TSK_VERSION, "RegRipperModule", "", versions[i]));
+        }
+    }
+
+    condition = "WHERE files.dir_type = 5 AND UPPER(files.name) = 'SYSTEM'";
+    
+    fileIds = imgDB.getFileIds(condition);
+
+    // Iterate over the files running RegRipper on each one.
+    for (std::vector<uint64_t>::iterator it = fileIds.begin(); it != fileIds.end(); it++)
+    {
+        // Create a file object for the id
+        std::auto_ptr<TskFile> pFile(fileManager.getFile(*it));
+
+        // Create the output file if it does not exist.
+        std::stringstream outFilePath;
+        outFilePath << outPath << "\\" << pFile->getName() << "_" 
+            << pFile->getId() << ".txt";
+        
+        vector<std::string> names = getRegRipperValues(outFilePath.str(), "Bitness");
+        TskBlackboardArtifact osart = pFile->createArtifact(TSK_OS_INFO);
+        for(int i = 0; i < names.size(); i++){
+            osart.addAttribute(TskBlackboardAttribute(TSK_PROCESSOR_ARCHITECTURE, "RegRipperModule", "", names[i]));
+        }
+    }
+}
 
 static TskModule::Status runRegRipper(RegType type)
 {
@@ -384,6 +466,8 @@ extern "C"
                 return TskModule::FAIL;
             if (runRegRipper(SOFTWARE) != TskModule::OK)
                 return TskModule::FAIL;
+
+            getOSInfo();
         }
         catch (TskException& tskEx)
         {
