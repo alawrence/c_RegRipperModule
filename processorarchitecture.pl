@@ -11,7 +11,7 @@ my %config = (hive          => "System",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20081212);
+              version       => 20121109);
 
 sub getConfig{return %config}
 
@@ -47,8 +47,8 @@ sub pluginmain {
 		if ($env = $root_key->get_subkey($env_path)) {
 			
 			eval {
-				my $files = $env->get_value("PROCESSOR_ARCHITECTURE")->get_data();
-				::rptMsg("ProcessorArchitecture = ".$files);
+				my $architecture = $env->get_value("PROCESSOR_ARCHITECTURE")->get_data();
+				::rptMsg("ProcessorArchitecture = ".$architecture);
 			};
 			::rptMsg($@) if ($@);
 			

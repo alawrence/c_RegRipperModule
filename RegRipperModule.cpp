@@ -45,6 +45,16 @@ static enum RegType
     ALL
 };
 
+/**
+ * Parse RegRipper output from a specific output file for matches on the valueName. The 
+ * function will return all lines in the file that match the valueName followed byt one 
+ * of the potential RegRipper seperators. This may not always find all lines of a plugin
+ * writer uses a new seperator.
+ * @param regRipperFileName The full path to a regRipper output file.
+ * @param valueName The name of the value to search for. Will support regex matches that
+ * come before a seperator.
+ * @return A vector of matching lines from the file.
+ */
 static std::vector<std::string> getRegRipperValues(const std::string& regRipperFileName, const std::string& valueName){
     Poco::FileInputStream inStream(regRipperFileName);
     std::vector<std::string> results;
@@ -69,6 +79,13 @@ static std::vector<std::string> getRegRipperValues(const std::string& regRipperF
     inStream.close();
     return results;
 }
+
+
+
+/**
+ * Searches the RegRipper output for operating system information then posts it to the
+ * blackboard.
+ */
 
 static void getOSInfo(){
     
