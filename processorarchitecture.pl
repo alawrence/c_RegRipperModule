@@ -1,7 +1,7 @@
 #-----------------------------------------------------------
 # processorarchitecture.pl
 #
-# copyright 
+# copyright 2012 Basis Technology
 #-----------------------------------------------------------
 package processorarchitecture;
 use strict;
