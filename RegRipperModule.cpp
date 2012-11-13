@@ -135,10 +135,13 @@ static void getOSInfo(){
         outFilePath << outPath << "\\" << pFile->getName() << "_" 
             << pFile->getId() << ".txt";
         
-        vector<std::string> names = getRegRipperValues(outFilePath.str(), "Bitness");
+        vector<std::string> names = getRegRipperValues(outFilePath.str(), "ProcessorArchitecture");
         TskBlackboardArtifact osart = pFile->createArtifact(TSK_OS_INFO);
         for(int i = 0; i < names.size(); i++){
-            osart.addAttribute(TskBlackboardAttribute(TSK_PROCESSOR_ARCHITECTURE, "RegRipperModule", "", names[i]));
+            if(names[i].compare("AMD64") == 0)
+                osart.addAttribute(TskBlackboardAttribute(TSK_PROCESSOR_ARCHITECTURE, "RegRipperModule", "", "x86-64"));
+            else
+                osart.addAttribute(TskBlackboardAttribute(TSK_PROCESSOR_ARCHITECTURE, "RegRipperModule", "", names[i]));
         }
     }
 }
